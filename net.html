@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hehe</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffe6e6; /* Light pink background */
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* Para hindi mag-scroll pag gumalaw yung button */
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #ff4d4d;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .gif-container img {
+            width: 200px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 1.5rem;
+            padding: 10px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        #yesBtn {
+            background-color: #ff4d4d;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #yesBtn:hover {
+            background-color: #e60000;
+            transform: scale(1.1);
+        }
+
+        #noBtn {
+            background-color: white;
+            color: #ff4d4d;
+            border: 2px solid #ff4d4d;
+            position: relative; /* Importante ito para gumana ang absolute positioning mamaya */
+        }
+
+        /* Styles para sa success message */
+        .hidden {
+            display: none;
+        }
+        
+        .success-message {
+            color: #ff4d4d;
+            font-size: 2rem;
+            font-weight: bold;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+    </style>
+    <!-- Import confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cute GIF placeholder (pwede mong palitan ng ibang image URL) -->
+        <div class="gif-container" id="gifContainer">
+            <img src="https://media.giphy.com/media/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="Cute Bear">
+        </div>
+
+        <h1 id="question">pwede ba pa kiss tus hug yung matagal? 💖</h1>
+
+        <div class="btn-group">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+        
+        <div class="success-message hidden" id="successMsg">
+            sabi na nga ba e! i love you, lady gwyneth 🥰❤️
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const question = document.getElementById('question');
+        const gifContainer = document.getElementById('gifContainer');
+        const btnGroup = document.querySelector('.btn-group');
+        const successMsg = document.getElementById('successMsg');
+
+        // Listahan ng mga malungkot na GIFs
+        const sadGifs = [
+            "https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif", // Crying
+            "https://media.giphy.com/media/7SF5scGB2AFrgsXP63/giphy.gif", // Sad Spongebob
+            "https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif", // Crying Hamster
+            "https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif" // Sad Kermit
+        ];
+
+        // Function para ilipat ang No button sa random na pwesto
+        function moveButton() {
+            // Palitan ang GIF ng random na malungkot na GIF
+            const randomIndex = Math.floor(Math.random() * sadGifs.length);
+            const img = gifContainer.querySelector('img');
+            img.src = sadGifs[randomIndex];
+
+            // Kunin ang lapad at taas ng window
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // Kunin ang lapad at taas ng button
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            // Mag-generate ng random coordinates
+            // Binabawas natin ang size ng button para hindi lumabas sa screen
+            const randomX = Math.random() * (windowWidth - btnWidth);
+            const randomY = Math.random() * (windowHeight - btnHeight);
+
+            // I-apply ang bagong position
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // Event listener: Pag tinutok ang mouse (Desktop)
+        noBtn.addEventListener('mouseover', moveButton);
+
+        // Event listener: Pag tinap sa touchscreen (Mobile)
+        // Minsan mahirap i-hover sa phone, kaya pag-click na lang din gagalaw siya
+        noBtn.addEventListener('click', moveButton);
+
+        // Logic kapag pinindot ang YES
+        yesBtn.addEventListener('click', () => {
+            // Itago ang tanong at buttons
+            question.style.display = 'none';
+            btnGroup.style.display = 'none';
+            
+            // Palitan ang GIF ng mas masaya (optional)
+            const img = gifContainer.querySelector('img');
+            img.src = "https://media.giphy.com/media/T86i6yDyOYz7J6dPhf/giphy.gif"; // Happy cat/bear gif
+            
+            // Ipakita ang success message
+            successMsg.classList.remove('hidden');
+            
+            // Confetti effect
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        });
+    </script>
+</body>
+</html>
